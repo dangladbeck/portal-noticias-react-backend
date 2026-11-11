@@ -23,12 +23,13 @@ const pool = new pg.Pool({
 // rota de login
 app.post("/login", async (req, res) => {
     try {
+        const {email, senha} = req.body;
         // consultar os dados de login no banco de dados
         const resultado = await pool.query("SELECT id, nome, email FROM administrador WHERE email=$1 AND senha=$2", [email, senha]);
     
 
         // verificar se o administrador foi encontrado
-        if (resultado.row.length == 0) {
+        if (resultado.rows.length == 0) {
             return res.status(401).json({
                 mensagem: "e-Mail ou senha incorretos"
             });
@@ -43,7 +44,7 @@ app.post("/login", async (req, res) => {
     catch (error) {
         console.log("Erro ao realizar login!", error);
         return res.status(500).json({
-            mensagem: "Erro no servidor - rota de login"
+            mensagem: "Erro no servidor - rota de login : " + error
         });
     }
 });
