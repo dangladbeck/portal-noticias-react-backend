@@ -49,6 +49,24 @@ app.post("/login", async (req, res) => {
     }
 });
 
+// rota para listar administradores
+app.get('/administradores', async (req, res) => {
+    try {
+        const resultado = await pool.query("SELECT * FROM administrador ORDER BY nome");
+        res.json(resultado.rows);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            mensagem: "Erro ao listar administradores : " + error
+        });
+    }
+
+
+
+    
+});
+
+
 app.listen(3000, () => {
     console.log("Servidor iniciado na porta 3000!");
 });
