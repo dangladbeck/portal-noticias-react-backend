@@ -30,12 +30,12 @@ app.post("/login", async (req, res) => {
 
         // verificar se o administrador foi encontrado
         if (resultado.rows.length == 0) {
-            return res.status(401).json({
+            /*return*/ res.status(401).json({
                 mensagem: "e-Mail ou senha incorretos"
             });
         }
         else {
-            return res.json({
+            /*return*/ res.json({
                 mensagem: "Login realizado com sucesso!",
                 administrador: resultado.rows[0]
             })
@@ -43,7 +43,7 @@ app.post("/login", async (req, res) => {
     }
     catch (error) {
         console.log("Erro ao realizar login!", error);
-        return res.status(500).json({
+        /*return*/ res.status(500).json({
             mensagem: "Erro no servidor - rota de login : " + error
         });
     }
@@ -59,11 +59,23 @@ app.get('/administradores', async (req, res) => {
         res.status(500).json({
             mensagem: "Erro ao listar administradores : " + error
         });
+    }    
+});
+
+// rota para cadastrar administrador
+app.post("/administradores", async (req, res) => {
+    const {nome, email, senha} = req.body;
+    try {
+        await pool.query("INSERT INTO administrador (nome, email, senha) VALUES ($1, $2, $3)", [nome, email, senha]);
+        res.json({
+            mensagem: "Administrador cadastrado com sucesso!"
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            mensagem: "Erro ao cadastrar administrador : " + error
+        });
     }
-
-
-
-    
 });
 
 
